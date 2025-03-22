@@ -23,7 +23,7 @@ const ALLOWED_ORIGINS = {
     "https://aryafoulad.parandx.com"
   ],
   development: [
-    "http://localhost:3000",
+    "http://localhost:3003",
     "http://localhost:3001",
     "http://localhost:3002",
     "http://192.168.43.80:3001"
