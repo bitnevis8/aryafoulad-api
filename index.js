@@ -45,7 +45,7 @@ const startServer = async () => {
 
     // تنظیمات Rate Limiting
     const limiter = rateLimit({
-      windowMs: 15 * 60 * 1000,
+      windowMs: 15 * 60 * 100000,
       max: 100,
       message: {
         status: 429,
