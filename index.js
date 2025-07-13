@@ -18,8 +18,8 @@ const SERVER_CONFIG = {
 // تنظیمات محیط‌های مختلف
 const ALLOWED_ORIGINS = {
   production: [
-    "https://aryafoulad.pourdian.ir",
-    "https://aryafoulad-api.pourdian.ir"
+    "https://aryafoulad.pourdian.com",
+    "https://aryafoulad-api.pourdian.com"
   ],
   development: [
     "http://localhost:3003",

@@ -4,7 +4,7 @@
     "PORT": "3010"
   },
   "FRONTEND": {
-    "HOST": "https://aryafoulad.parandx.com",
+    "HOST": "https://aryafoulad.pourdian.com",
     "PORT": "3011"
   },
   "DB": {
