@@ -24,13 +24,13 @@
     "avatar": null
   },
   {
-    "firstName": "سارا",
-    "lastName": "محمدی",
-    "firstNameEn": "Sara",
-    "lastNameEn": "Mohammadi",
-    "email": "sara@example.com",
-    "password": "123456",
-    "roleId": 2,
+    "firstName": "مهدی",
+    "lastName": "رحیمی",
+    "firstNameEn": "Mehdi",
+    "lastNameEn": "Rahimi",
+    "email": "aryafoulad@gmail.com",
+    "password": "12345678",
+    "roleId": 1,
     "isActive": true,
     "isEmailVerified": true,
     "avatar": null
