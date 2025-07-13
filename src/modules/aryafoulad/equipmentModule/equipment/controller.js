@@ -83,6 +83,13 @@ class EquipmentController {
         });
       }
 
+      // Sanitize date fields
+      ['last_calibration_date', 'next_calibration_date', 'purchase_date'].forEach(field => {
+        if (!equipmentData[field] || equipmentData[field] === 'Invalid date') {
+          equipmentData[field] = null;
+        }
+      });
+
       const equipment = await Equipment.create(equipmentData);
 
       res.status(201).json({
