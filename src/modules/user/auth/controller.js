@@ -17,7 +17,7 @@ function getCookieConfig(isProduction) {
     secure: isProduction, // در سرور `true` باشد، در لوکال `false`
     maxAge: 24 * 60 * 60 * 1000, // 24 ساعت
     path: "/",
-    domain: isProduction ? ".parandx.com" : undefined, // برای دسترسی از همه ساب‌دامین‌ها
+    domain: isProduction ? ".pourdian.ir" : undefined, // برای دسترسی از همه ساب‌دامین‌های pourdian.ir
     sameSite: isProduction ? "None" : "Lax", // در سرور `None`، در لوکال `Lax`
   };
 }
@@ -169,7 +169,7 @@ class AuthController extends BaseController {
         secure: isProduction,
         maxAge: 30 * 24 * 60 * 60 * 1000,
         path: "/",
-        domain: isProduction ? ".parandx.com" : undefined,
+        domain: isProduction ? ".pourdian.ir" : undefined,
         sameSite: isProduction ? "None" : "Lax",
       });
 
@@ -300,7 +300,7 @@ class AuthController extends BaseController {
         secure: isProduction, // در سرور `true` باشد، در لوکال `false`
         maxAge: 30 * 24 * 60 * 60 * 1000, // 30 روز
         path: "/",
-        domain: isProduction ? ".parandx.com" : undefined, // در لوکال `undefined` باشد
+        domain: isProduction ? ".pourdian.ir" : undefined, // در لوکال `undefined` باشد
         sameSite: isProduction ? "None" : "Lax", // در سرور `None`، در لوکال `Lax`
       });
 
@@ -582,7 +582,7 @@ class AuthController extends BaseController {
         secure: isProduction,
         maxAge: 30 * 24 * 60 * 60 * 1000,
         path: "/",
-        domain: isProduction ? ".parandx.com" : undefined,
+        domain: isProduction ? ".pourdian.ir" : undefined,
         sameSite: isProduction ? "None" : "Lax",
       });
 
