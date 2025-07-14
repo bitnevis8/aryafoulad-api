@@ -23,7 +23,9 @@ const SERVER_CONFIG = {
 const ALLOWED_ORIGINS = {
   production: [
     "https://aryafoulad.pourdian.com",
-    "https://aryafoulad-api.pourdian.com"
+    "https://aryafoulad-api.pourdian.com",
+    "https://aryafoulad-api.pourdian.com:3010",
+    "https://www.aryafoulad.pourdian.com"
   ],
   development: [
     "http://localhost:3003",
@@ -72,7 +74,7 @@ const startServer = async () => {
           scriptSrc: ["'self'", "'unsafe-inline'"],
           styleSrc: ["'self'", "'unsafe-inline'"],
           imgSrc: ["'self'", "data:", "https:"],
-          connectSrc: ["'self'"],
+          connectSrc: ["'self'", "wss:", "ws:", "https://aryafoulad-api.pourdian.com", "https://aryafoulad-api.pourdian.com:3010"],
           fontSrc: ["'self'", "https:", "data:"],
           objectSrc: ["'none'"],
           mediaSrc: ["'self'"],
@@ -92,24 +94,30 @@ const startServer = async () => {
     app.use(
       cors({
         origin: function (origin, callback) {
+          console.log('CORS check for origin:', origin);
           if (!origin) {
+            console.log('No origin, allowing');
             return callback(null, true);
           }
 
           const allowedOrigins = ALLOWED_ORIGINS[SERVER_CONFIG.NODE_ENV];
+          console.log('Allowed origins:', allowedOrigins);
           if (allowedOrigins.includes(origin)) {
+            console.log('Origin allowed:', origin);
             callback(null, true);
           } else {
+            console.log('Origin not allowed:', origin);
             callback(new Error(`Origin ${origin} not allowed by CORS`));
           }
         },
-        methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
         allowedHeaders: [
           "Content-Type", 
           "Authorization", 
           "X-Guest-Access",
           "Accept",
-          "Origin"
+          "Origin",
+          "Cookie"
         ],
         exposedHeaders: ["Set-Cookie"],
         credentials: true,
@@ -121,6 +129,16 @@ const startServer = async () => {
     app.use(cookieParser());
     app.use(bodyParser.json({ limit: '20mb' }));
     app.use(bodyParser.urlencoded({ extended: true, limit: '20mb' }));
+    
+    // Middleware برای logging درخواست‌ها
+    app.use((req, res, next) => {
+      console.log(`${new Date().toISOString()} - ${req.method} ${req.originalUrl}`);
+      console.log('Headers:', req.headers);
+      if (req.body && Object.keys(req.body).length > 0) {
+        console.log('Body:', req.body);
+      }
+      next();
+    });
 
     // مسیرهای API
     app.use("/", baseRouter);
@@ -131,7 +149,10 @@ const startServer = async () => {
       cors: {
         origin: ALLOWED_ORIGINS[SERVER_CONFIG.NODE_ENV],
         credentials: true,
+        methods: ["GET", "POST"]
       },
+      transports: ['websocket', 'polling'],
+      allowEIO3: true
     });
 
     // لیست کاربران آنلاین (در حافظه)
@@ -140,23 +161,29 @@ const startServer = async () => {
     const onlineUserInfos = new Map(); // userId -> userInfo
 
     io.on('connection', (socket) => {
+      console.log('New socket connection:', socket.id);
+      
       // انتظار داریم کلاینت بعد از اتصال، اطلاعات کاربر را ارسال کند
       socket.on('user-online', async (user) => {
+        console.log('User online event received:', user);
         if (user && user.id) {
           onlineUsers.set(user.id, socket.id);
           socketToUser.set(socket.id, user.id);
           onlineUserInfos.set(user.id, user); // ذخیره اطلاعات کامل کاربر
+          console.log('Online users updated:', Array.from(onlineUserInfos.values()));
           // ارسال لیست کاربران آنلاین به همه (اطلاعات کامل)
           io.emit('online-users', Array.from(onlineUserInfos.values()));
         }
       });
 
       socket.on('disconnect', () => {
+        console.log('Socket disconnected:', socket.id);
         const userId = socketToUser.get(socket.id);
         if (userId) {
           onlineUsers.delete(userId);
           onlineUserInfos.delete(userId);
           socketToUser.delete(socket.id);
+          console.log('User removed from online list:', userId);
           io.emit('online-users', Array.from(onlineUserInfos.values()));
         }
       });
