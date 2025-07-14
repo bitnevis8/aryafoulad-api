@@ -24,7 +24,8 @@ const ALLOWED_ORIGINS = {
   production: [
     "https://aryafoulad.pourdian.com",
     "https://aryafoulad-api.pourdian.com",
-    "https://www.aryafoulad.pourdian.com"
+    "https://www.aryafoulad.pourdian.com",
+    "https://aryafoulad.pourdian.com:3011"
   ],
   development: [
     "http://localhost:3003",
@@ -39,8 +40,8 @@ const startServer = async () => {
   try {
     // اتصال به دیتابیس‌ها
     await initializeDatabase({ 
-      force: true, 
-      seed: true,
+      force:true , // Changed from true to false for production
+      seed: false, // Changed from true to false for production
       useMongoDB: false
     });
     console.log("✅ Databases initialized successfully!");
@@ -52,8 +53,8 @@ const startServer = async () => {
 
     // تنظیمات Rate Limiting
     const limiter = rateLimit({
-      windowMs: 15 * 60 * 100000, // 15 minutes
-      max: 500, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
+      windowMs: 15 * 60 * 1000, // 15 minutes (fixed: was 100000)
+      max: 1000, // Limit each IP to 1000 requests per `window` (here, per 15 minutes)
       message: {
         status: 429,
         success: false,
@@ -61,6 +62,10 @@ const startServer = async () => {
       },
       standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
       legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+      skip: (req) => {
+        // Skip rate limiting for health checks
+        return req.path === '/health' || req.path === '/api/health';
+      }
     });
 
     app.use(limiter);
