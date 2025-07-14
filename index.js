@@ -7,6 +7,10 @@ const baseRouter = require("./src/core/baseRouter");
 const initializeDatabase = require("./src/core/database/init");
 const rateLimit = require("express-rate-limit");
 const helmet = require("helmet");
+const http = require('http');
+const { Server } = require('socket.io');
+const User = require('./src/modules/user/user/model');
+let io; // Will be initialized after app.listen
 
 // تنظیمات سرور
 const SERVER_CONFIG = {
@@ -122,7 +126,43 @@ const startServer = async () => {
     app.use("/", baseRouter);
 
     // راه‌اندازی سرور
-    app.listen(SERVER_CONFIG.PORT, () => {
+    const server = http.createServer(app);
+    io = new Server(server, {
+      cors: {
+        origin: ALLOWED_ORIGINS[SERVER_CONFIG.NODE_ENV],
+        credentials: true,
+      },
+    });
+
+    // لیست کاربران آنلاین (در حافظه)
+    const onlineUsers = new Map(); // userId -> socketId
+    const socketToUser = new Map(); // socketId -> userId
+    const onlineUserInfos = new Map(); // userId -> userInfo
+
+    io.on('connection', (socket) => {
+      // انتظار داریم کلاینت بعد از اتصال، اطلاعات کاربر را ارسال کند
+      socket.on('user-online', async (user) => {
+        if (user && user.id) {
+          onlineUsers.set(user.id, socket.id);
+          socketToUser.set(socket.id, user.id);
+          onlineUserInfos.set(user.id, user); // ذخیره اطلاعات کامل کاربر
+          // ارسال لیست کاربران آنلاین به همه (اطلاعات کامل)
+          io.emit('online-users', Array.from(onlineUserInfos.values()));
+        }
+      });
+
+      socket.on('disconnect', () => {
+        const userId = socketToUser.get(socket.id);
+        if (userId) {
+          onlineUsers.delete(userId);
+          onlineUserInfos.delete(userId);
+          socketToUser.delete(socket.id);
+          io.emit('online-users', Array.from(onlineUserInfos.values()));
+        }
+      });
+    });
+
+    server.listen(SERVER_CONFIG.PORT, () => {
       console.log(
         `🚀 ParandX API SERVER listening on: ${SERVER_CONFIG.IP}:${SERVER_CONFIG.PORT} in ${SERVER_CONFIG.NODE_ENV} mode`
       );

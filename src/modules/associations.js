@@ -3,6 +3,7 @@ const Role = require('./user/role/model');
 const UserRole = require('./user/userRole/model');
 const { MissionOrder, MissionCompanion } = require('./aryafoulad/missionOrder/model');
 const FileUpload = require('./fileUpload/model');
+const LeaveRequest = require('./leaveRequest/model');
 
 
 
@@ -23,6 +24,20 @@ const defineAssociations = () => {
         foreignKey: 'roleId',
         otherKey: 'userId',
         as: 'users',
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE'
+    });
+
+    // ارتباطات UserRole با User و Role
+    UserRole.belongsTo(User, {
+        foreignKey: 'userId',
+        as: 'user',
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE'
+    });
+    UserRole.belongsTo(Role, {
+        foreignKey: 'roleId',
+        as: 'role',
         onDelete: 'CASCADE',
         onUpdate: 'CASCADE'
     });
@@ -65,7 +80,9 @@ const defineAssociations = () => {
         onUpdate: 'CASCADE'
     });
 
-
+    // ارتباط مرخصی با کاربر
+    LeaveRequest.belongsTo(User, { as: 'user', foreignKey: 'userId', onDelete: 'CASCADE' });
+    User.hasMany(LeaveRequest, { as: 'leaveRequests', foreignKey: 'userId', onDelete: 'CASCADE' });
 
 
 };

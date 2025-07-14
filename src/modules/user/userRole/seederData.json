@@ -5,14 +5,10 @@
   },
   {
     "userId": 1,
-    "roleId": 2
+    "roleId": 3
   },
   {
-    "userId": 3,
-    "roleId": 1
-  },
-  {
-    "userId": 4,
+    "userId": 2,
     "roleId": 1
   }
 ] 

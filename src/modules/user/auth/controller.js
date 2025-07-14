@@ -98,13 +98,13 @@ class AuthController extends BaseController {
     try {
       const value = req.body;
 
-      // ✅ یافتن نقش 'User'
+      // ✅ یافتن نقش 'Employee'
       const defaultUserRole = await Role.findOne({
-        where: { name: "User" }, // یا نام فارسی: { nameFa: "کاربر" }
+        where: { name: "employee" }, // یا نام فارسی: { nameFa: "کارمند" }
       });
 
       if (!defaultUserRole) {
-        console.error("❌ Default 'User' role not found. Please create it.");
+        console.error("❌ Default 'employee' role not found. Please create it.");
         return this.response(res, 500, false, "نقش پیش‌فرض یافت نشد.");
       }
 
@@ -207,13 +207,13 @@ class AuthController extends BaseController {
     try {
       const value = req.body;
 
-      // ✅ یافتن نقش 'User'
+      // ✅ یافتن نقش 'Employee'
       const defaultUserRole = await Role.findOne({
-        where: { name: "User" }, // یا نام فارسی: { nameFa: "کاربر" }
+        where: { name: "employee" }, // یا نام فارسی: { nameFa: "کارمند" }
       });
 
       if (!defaultUserRole) {
-        console.error("❌ Default 'User' role not found. Please create it.");
+        console.error("❌ Default 'employee' role not found. Please create it.");
         return this.response(res, 500, false, "نقش پیش‌فرض یافت نشد.");
       }
 

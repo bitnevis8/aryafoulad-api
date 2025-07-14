@@ -1,20 +1,32 @@
 [
   {
-    "name": "admin",
-    "nameEn": "Administrator",
-    "nameFa": "مدیر",
-    "description": "مدیر کل سیستم با دسترسی کامل به تمامی بخش‌ها"
+    "name": "super_admin",
+    "nameEn": "Super Administrator",
+    "nameFa": "مدیر کل",
+    "description": "مدیر کل سیستم با دسترسی کامل به تمامی بخش‌ها و مدیریت سایر مدیران"
+  },
+  {
+    "name": "internal_admin",
+    "nameEn": "Internal Administrator",
+    "nameFa": "مدیر داخلی",
+    "description": "مدیر داخلی سیستم با دسترسی به مدیریت بخش‌های داخلی و نظارت بر کارکنان"
   },
   {
     "name": "staff",
     "nameEn": "Staff",
-    "nameFa": "کارمند",
-    "description": "کارمند سیستم با دسترسی محدود برای مدیریت و نظارت"
+    "nameFa": "ستادی",
+    "description": "کارمند ستادی با دسترسی به امکانات پیشرفته و مدیریت وظایف"
   },
   {
-    "name": "user",
-    "nameEn": "User",
-    "nameFa": "کاربر",
-    "description": "کاربر عادی سیستم با دسترسی به امکانات پایه"
+    "name": "inspector",
+    "nameEn": "Inspector",
+    "nameFa": "بازرس",
+    "description": "بازرس سیستم با دسترسی به نظارت و بررسی عملکرد سایر کاربران"
+  },
+  {
+    "name": "employee",
+    "nameEn": "Employee",
+    "nameFa": "کارمند",
+    "description": "کارمند عادی سیستم با دسترسی به امکانات پایه و انجام وظایف محوله"
   }
 ]

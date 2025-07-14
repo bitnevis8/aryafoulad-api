@@ -3,6 +3,7 @@ const missionOrderRoutes = require('./missionOrder/route');
 const unitLocationRoutes = require('./unitLocation/route');
 const rateSettingRoutes = require('./rateSettings/route');
 const equipmentModuleRoutes = require('./equipmentModule/route');
+const leaveRequestRoutes = require('../leaveRequest/route');
 
 const router = express.Router();
 
@@ -17,6 +18,9 @@ router.use('/rate-settings', rateSettingRoutes);
 
 // Use equipment module routes
 router.use('/equipment-module', equipmentModuleRoutes);
+
+// Use leave request routes
+router.use('/leave-request', leaveRequestRoutes);
 
 // Additional routes for other modules can be added here
 

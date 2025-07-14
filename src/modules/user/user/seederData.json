@@ -1,5 +1,30 @@
 [
   {
+    "firstName": "حسین",
+    "lastName": "پوردیان",
+    "firstNameEn": "Pourdian",
+    "lastNameEn": "Pourdian",
+    "username": "hpourdian",
+    "email": "bitnevis@yahoo.com",
+    "password": "12345678",
+    "isActive": true,
+    "isEmailVerified": true,
+    "avatar": "https://example.com/avatars/hasan.jpg",
+    "BusinessName": "فرآورده‌های کشاورزی پارس",
+    "BusinessContactInfo": "09309988776"
+  },
+  {
+    "firstName": "مهدی",
+    "lastName": "رحیمی",
+    "firstNameEn": "Mehdi",
+    "lastNameEn": "Rahimi",
+    "email": "aryafoulad@gmail.com",
+    "password": "12345678",
+    "isActive": true,
+    "isEmailVerified": true,
+    "avatar": null
+  },
+  {
     "firstName": "مریم",
     "lastName": "محمدی",
     "firstNameEn": "Maryam",
@@ -138,31 +163,6 @@
     "avatar": "https://example.com/avatars/hasan.jpg",
     "BusinessName": "فرآورده‌های کشاورزی پارس",
     "BusinessContactInfo": "09309988776"
-  },
-  {
-    "firstName": "حسین",
-    "lastName": "پوردیان",
-    "firstNameEn": "Pourdian",
-    "lastNameEn": "Pourdian",
-    "username": "hpourdian",
-    "email": "bitnevis@yahoo.com",
-    "password": "12345678",
-    "isActive": true,
-    "isEmailVerified": true,
-    "avatar": "https://example.com/avatars/hasan.jpg",
-    "BusinessName": "فرآورده‌های کشاورزی پارس",
-    "BusinessContactInfo": "09309988776"
-  },
-  {
-    "firstName": "مهدی",
-    "lastName": "رحیمی",
-    "firstNameEn": "Mehdi",
-    "lastNameEn": "Rahimi",
-    "email": "aryafoulad@gmail.com",
-    "password": "12345678",
-    "roleId": 1,
-    "isActive": true,
-    "isEmailVerified": true,
-    "avatar": null
   }
+
 ]
