@@ -1,6 +1,6 @@
 {
   "SERVER": {
-    "IP": "0.0.0.0",
+    "IP": "localhost",
     "PORT": "3010"
   },
   "FRONTEND": {
