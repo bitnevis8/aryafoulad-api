@@ -41,7 +41,7 @@ const startServer = async () => {
     // اتصال به دیتابیس‌ها
     await initializeDatabase({ 
       force:true , // Changed from true to false for production
-      seed: false, // Changed from true to false for production
+      seed: true, // Changed from true to false for production
       useMongoDB: false
     });
     console.log("✅ Databases initialized successfully!");
