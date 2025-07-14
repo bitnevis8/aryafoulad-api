@@ -24,7 +24,6 @@ const ALLOWED_ORIGINS = {
   production: [
     "https://aryafoulad.pourdian.com",
     "https://aryafoulad-api.pourdian.com",
-    "https://aryafoulad-api.pourdian.com:3010",
     "https://www.aryafoulad.pourdian.com"
   ],
   development: [
@@ -74,7 +73,7 @@ const startServer = async () => {
           scriptSrc: ["'self'", "'unsafe-inline'"],
           styleSrc: ["'self'", "'unsafe-inline'"],
           imgSrc: ["'self'", "data:", "https:"],
-          connectSrc: ["'self'", "wss:", "ws:", "https://aryafoulad-api.pourdian.com", "https://aryafoulad-api.pourdian.com:3010"],
+          connectSrc: ["'self'", "wss:", "ws:", "https://aryafoulad-api.pourdian.com"],
           fontSrc: ["'self'", "https:", "data:"],
           objectSrc: ["'none'"],
           mediaSrc: ["'self'"],
@@ -94,7 +93,7 @@ const startServer = async () => {
     app.use(
       cors({
         origin: function (origin, callback) {
-          console.log('CORS check for origin:', origin);
+          console.log('CORS origin check:', origin);
           if (!origin) {
             console.log('No origin, allowing');
             return callback(null, true);
@@ -129,16 +128,6 @@ const startServer = async () => {
     app.use(cookieParser());
     app.use(bodyParser.json({ limit: '20mb' }));
     app.use(bodyParser.urlencoded({ extended: true, limit: '20mb' }));
-    
-    // Middleware برای logging درخواست‌ها
-    app.use((req, res, next) => {
-      console.log(`${new Date().toISOString()} - ${req.method} ${req.originalUrl}`);
-      console.log('Headers:', req.headers);
-      if (req.body && Object.keys(req.body).length > 0) {
-        console.log('Body:', req.body);
-      }
-      next();
-    });
 
     // مسیرهای API
     app.use("/", baseRouter);
