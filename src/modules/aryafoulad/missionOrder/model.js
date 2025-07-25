@@ -15,14 +15,6 @@ const MissionOrder = sequelize.define('MissionOrder', {
             key: 'id'
         }
     },
-    firstName: { 
-        type: DataTypes.STRING,
-        allowNull: true
-    },
-    lastName: { 
-        type: DataTypes.STRING,
-        allowNull: true
-    },
     personnelNumber: { 
         type: DataTypes.STRING,
         allowNull: true

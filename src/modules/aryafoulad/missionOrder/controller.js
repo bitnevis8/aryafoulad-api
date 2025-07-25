@@ -127,8 +127,6 @@ class MissionOrderController extends BaseController {
 
             // Convert string values to numbers and handle destinations
             const data = {
-                firstName: req.body.firstName || null,
-                lastName: req.body.lastName || null,
                 personnelNumber: req.body.personnelNumber || null,
                 fromUnit: req.body.fromUnit || null,
                 day: req.body.day || null,
