@@ -1,0 +1,76 @@
+{
+  "projectTypes": [
+    { "code": "CRANE_INSPECTION", "name": "بازرسی جرثقیل" },
+    { "code": "HIC_TEST", "name": "تست جذب ضربه (HIC)" },
+    { "code": "PE_PIPE_TEST", "name": "تست لوله پلی‌اتیلن (لهیدگی/گاز)" },
+    { "code": "PLAYGROUND_EARTH_WELD", "name": "بازرسی ارت و جوش وسایل بازی" }
+  ],
+  "formTemplates": [
+    {
+      "code": "AFG-FR-XXX-R0",
+      "title": "فرم درخواست بازرسی ارت و جوش وسایل بازی",
+      "project_type_code": "PLAYGROUND_EARTH_WELD",
+      "version": "R0",
+      "schema": {
+        "formTitle": "فرم درخواست بازرسی ارت و جوش وسایل بازی",
+        "formCode": "AFG-FR-XXX-R0",
+        "fields": {
+          "شماره_پرونده": "",
+          "تاریخ": "",
+          "استان": "",
+          "شهرستان": "",
+          "منطقه_شهرداری": "",
+          "کد_ملی": "",
+          "نام_پارک": "",
+          "مسئول_مجموعه_بازی": "",
+          "شماره_و_تاریخ_تأسیس": "",
+          "تعداد_وسیله_بازی": "",
+          "آدرس": "",
+          "شماره_تماس": ""
+        },
+        "standards": { "AS3000": false, "AWS_D1_1": false, "ASME_SEC_V": false, "EN_8987": false },
+        "inspectionStages": { "حین_ساخت": false, "حین_نصب": false, "بهره_برداری": false, "ادواری": false },
+        "inspectionTypes": [
+          { "type": "VT", "تعداد": 0, "بخش_دستگاه": "" },
+          { "type": "UT", "تعداد": 0, "بخش_دستگاه": "" },
+          { "type": "MT", "تعداد": 0, "بخش_دستگاه": "" },
+          { "type": "PT", "تعداد": 0, "بخش_دستگاه": "" },
+          { "type": "تست_ارت", "تعداد": 0, "بخش_دستگاه": "" },
+          { "type": "بازرسی_جوش", "تعداد": 0, "بخش_دستگاه": "" }
+        ],
+        "signSection": { "مهر_و_امضاء_متقاضی": "", "تاریخ": "" }
+      }
+    },
+    {
+      "code": "AFG-RP-PLAYGROUND-EARTH-WELD-R0",
+      "title": "گزارش بازرسی ارت و جوش وسایل بازی",
+      "project_type_code": "PLAYGROUND_EARTH_WELD",
+      "version": "R0",
+      "schema": {
+        "formTitle": "گزارش بازرسی ارت و جوش وسایل بازی",
+        "client": "",
+        "project": "",
+        "contractNo": "",
+        "reportNo": "",
+        "testDate": "",
+        "location": "",
+        "standard": "AS 3000",
+        "specimenData": {
+          "location": "",
+          "testingTemp": "Ambient Temperature",
+          "items": [
+            { "itemName": "", "condition": "", "measurementRange": "", "acceptanceRange": "", "result": "", "remark": "" }
+          ]
+        },
+        "reportingResults": [
+          { "no": 1, "itemName": "", "condition": "", "measurementRange": "", "acceptanceRange": "", "result": "", "remark": "" }
+        ],
+        "comment": "",
+        "testedBy": "",
+        "reviewedBy": "",
+        "approvedBy": ""
+      }
+    }
+  ]
+}
+

@@ -14,6 +14,7 @@ User.init(
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     firstName: { type: DataTypes.STRING, allowNull: false },
     lastName: { type: DataTypes.STRING, allowNull: false },
+    nationalId: { type: DataTypes.STRING(10), allowNull: true, unique: true },
     email: { type: DataTypes.STRING, allowNull: true, unique: true },
     mobile: { type: DataTypes.STRING, allowNull: true, unique: true },
     phone: { type: DataTypes.STRING, allowNull: true },

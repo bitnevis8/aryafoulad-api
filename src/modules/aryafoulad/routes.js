@@ -4,6 +4,7 @@ const unitLocationRoutes = require('./unitLocation/route');
 const rateSettingRoutes = require('./rateSettings/route');
 const equipmentModuleRoutes = require('./equipmentModule/route');
 const leaveRequestRoutes = require('../leaveRequest/route');
+const projectsRoutes = require('./projects/route');
 
 const router = express.Router();
 
@@ -21,6 +22,9 @@ router.use('/equipment-module', equipmentModuleRoutes);
 
 // Use leave request routes
 router.use('/leave-request', leaveRequestRoutes);
+
+// Use projects routes
+router.use('/projects', projectsRoutes);
 
 // Additional routes for other modules can be added here
 

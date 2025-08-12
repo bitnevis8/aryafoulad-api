@@ -10,10 +10,11 @@ const seedUnitLocations = require("../../../modules/aryafoulad/unitLocation/seed
 const { seed: seedRateSettings } = require("../../../modules/aryafoulad/rateSettings/seeder");
 const seedWarehouses = require("../../../modules/aryafoulad/equipmentModule/warehouse/seeder");
 const seedEquipment = require("../../../modules/aryafoulad/equipmentModule/equipment/seeder");
+const { seed: seedProjects } = require("../../../modules/aryafoulad/projects/seeder");
 
 // Group seeders by module for better organization and control
 const userSeeders = [seedRoles, seedUsers, seedUserRoles];
-const aryafouladSeeders = [seedUnitLocations, seedRateSettings, seedWarehouses, seedEquipment];
+const aryafouladSeeders = [seedUnitLocations, seedRateSettings, seedWarehouses, seedEquipment, seedProjects];
 
 
 async function runSeederGroup(seeders, groupName) {

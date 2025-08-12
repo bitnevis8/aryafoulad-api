@@ -15,12 +15,15 @@ require("../../modules/aryafoulad/equipmentModule/warehouse/model");
 require("../../modules/aryafoulad/equipmentModule/equipment/model");
 require("../../modules/aryafoulad/equipmentModule/equipmentAssignment/model");
 require("../../modules/aryafoulad/equipmentModule/calibrationHistory/model");
+// Projects module models
+require("../../modules/aryafoulad/projects/models");
 
 
 
 // Import and define all associations
 const defineUserAssociations = require('../../modules/user/associations');
 const defineEquipmentAssociations = require("../../modules/aryafoulad/equipmentModule/associations");
+// Note: projects models define local associations; if centralization needed, add here
 
 /**
  * راه‌اندازی اتصال به دیتابیس‌ها و اجرای migrations
