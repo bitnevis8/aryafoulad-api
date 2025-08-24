@@ -4,11 +4,10 @@
     "roleId": 1
   },
   {
-    "userId": 1,
-    "roleId": 3
-  },
-  {
     "userId": 2,
     "roleId": 1
-  }
-] 
+  },
+  { "userId": 3, "roleId": 6 },
+  { "userId": 4, "roleId": 6 },
+  { "userId": 5, "roleId": 6 }
+]

@@ -114,13 +114,18 @@ class UserController extends BaseController {
         password,
         roleIds,
         avatar,
+        nationalId,
+        type,
+        companyName,
+        latitude,
+        longitude,
       } = req.body;
 
       // اعتبارسنجی ورودی‌ها
       const schema = Joi.object({
         firstName: Joi.string().required(),
         lastName: Joi.string().required(),
-        email: Joi.string().email().required(),
+        email: Joi.string().email().allow(null).optional(),
         mobile: Joi.string()
           .pattern(/^[0-9]{11}$/)
           .optional(),
@@ -129,6 +134,11 @@ class UserController extends BaseController {
         password: Joi.string().min(6).required(),
         roleIds: Joi.array().items(Joi.number().integer()).optional(),
         avatar: Joi.string().optional(),
+        nationalId: Joi.string().length(10).optional().allow(null, ''),
+        type: Joi.string().valid('person', 'company').optional(),
+        companyName: Joi.string().optional().allow(null, ''),
+        latitude: Joi.number().optional().allow(null),
+        longitude: Joi.number().optional().allow(null),
       });
 
       const { error, value } = schema.validate(req.body);
@@ -140,7 +150,11 @@ class UserController extends BaseController {
       // چک کردن تکراری بودن ایمیل یا موبایل
       const existingUser = await User.findOne({
         where: {
-          [Op.or]: [{ email: value.email }, { mobile: value.mobile }],
+          [Op.or]: [
+            value.email ? { email: value.email } : null,
+            value.mobile ? { mobile: value.mobile } : null,
+            value.nationalId ? { nationalId: value.nationalId } : null,
+          ].filter(Boolean),
         },
       });
 
@@ -158,13 +172,18 @@ class UserController extends BaseController {
       const newUser = await User.create({
         firstName: value.firstName,
         lastName: value.lastName,
-        email: value.email,
+        email: value.email || null,
         mobile: value.mobile || null,
         phone: value.phone || null,
         username: value.username || null,
         password: value.password,
         avatar: value.avatar || null,
         isEmailVerified: true,
+        nationalId: value.nationalId || null,
+        type: value.type || 'person',
+        companyName: value.companyName || null,
+        latitude: typeof value.latitude === 'number' ? value.latitude : null,
+        longitude: typeof value.longitude === 'number' ? value.longitude : null,
       });
 
       // اگر roleIds ارائه شده باشد، نقش‌ها را به کاربر اضافه کنید
@@ -204,6 +223,11 @@ class UserController extends BaseController {
         password,
         roleIds,
         avatar,
+        nationalId,
+        type,
+        companyName,
+        latitude,
+        longitude,
       } = req.body;
 
       // بروزرسانی اطلاعات کاربر
@@ -215,6 +239,11 @@ class UserController extends BaseController {
         phone: phone ?? user.phone,
         username: username ?? user.username,
         avatar: avatar ?? user.avatar,
+        nationalId: nationalId ?? user.nationalId,
+        type: type ?? user.type,
+        companyName: companyName ?? user.companyName,
+        latitude: typeof latitude === 'number' ? latitude : user.latitude,
+        longitude: typeof longitude === 'number' ? longitude : user.longitude,
       };
 
       if (password) {

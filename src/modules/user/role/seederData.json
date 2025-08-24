@@ -28,5 +28,11 @@
     "nameEn": "Employee",
     "nameFa": "کارمند",
     "description": "کارمند عادی سیستم با دسترسی به امکانات پایه و انجام وظایف محوله"
+  },
+  {
+    "name": "customer",
+    "nameEn": "Customer",
+    "nameFa": "مشتری",
+    "description": ""
   }
 ]

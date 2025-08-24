@@ -104,15 +104,9 @@ class ProjectsController extends BaseController {
             password: value.nationalId, // placeholder (hashed via hook)
             isActive: true,
           }, { transaction: t });
-        }
-
-        // ensure customer role
-        const customerRole = await Role.findOne({ where: { nameEn: 'Customer' }, transaction: t });
-        if (customerRole && user) {
-          const hasRole = user.hasRole ? await user.hasRole(customerRole, { transaction: t }) : false;
-          if (!hasRole && user.addRole) {
-            await user.addRole(customerRole, { transaction: t });
-          }
+          // add customer role
+          const customerRole = await Role.findOne({ where: { nameEn: 'Customer' }, transaction: t });
+          if (customerRole && user.addRole) await user.addRole(customerRole, { transaction: t });
         }
 
         // create project
