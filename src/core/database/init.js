@@ -7,6 +7,7 @@ const seedMongoDB = require("./mongodb/seeders");
 require("../../modules/user/user/model");
 require("../../modules/user/role/model");
 require("../../modules/user/userRole/model");
+require("../../modules/user/customerCompany/model");
 require("../../modules/aryafoulad/missionOrder/model");
 require("../../modules/aryafoulad/rateSettings/model");
 
@@ -17,12 +18,15 @@ require("../../modules/aryafoulad/equipmentModule/equipmentAssignment/model");
 require("../../modules/aryafoulad/equipmentModule/calibrationHistory/model");
 // Projects module models
 require("../../modules/aryafoulad/projects/models");
+// Inspection Request model
+require("../../modules/aryafoulad/inspectionRequest/model");
 
 
 
 // Import and define all associations
 const defineUserAssociations = require('../../modules/user/associations');
 const defineEquipmentAssociations = require("../../modules/aryafoulad/equipmentModule/associations");
+const defineAryafouladAssociations = require("../../modules/aryafoulad/associations");
 // Note: projects models define local associations; if centralization needed, add here
 
 /**
@@ -42,6 +46,7 @@ const initializeDatabase = async (options = { force: false, seed: false, useMong
     console.log("🔗 Defining model associations...");
     defineUserAssociations();
     defineEquipmentAssociations();
+    defineAryafouladAssociations();
     console.log("✅ All associations defined successfully.");
 
     if (options.force) {

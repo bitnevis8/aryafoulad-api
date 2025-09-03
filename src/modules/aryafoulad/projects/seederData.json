@@ -3,16 +3,16 @@
     { "code": "CRANE_INSPECTION", "name": "بازرسی جرثقیل" },
     { "code": "HIC_TEST", "name": "تست جذب ضربه (HIC)" },
     { "code": "PE_PIPE_TEST", "name": "تست لوله پلی‌اتیلن (لهیدگی/گاز)" },
-    { "code": "PLAYGROUND_EARTH_WELD", "name": "بازرسی ارت و جوش وسایل بازی" }
+    { "code": "PLAYGROUND_EARTH_WELD", "name": "بازرسی ارت" }
   ],
   "formTemplates": [
     {
       "code": "AFG-FR-XXX-R0",
-      "title": "فرم درخواست بازرسی ارت و جوش وسایل بازی",
+      "title": "فرم درخواست بازرسی ارت",
       "project_type_code": "PLAYGROUND_EARTH_WELD",
       "version": "R0",
       "schema": {
-        "formTitle": "فرم درخواست بازرسی ارت و جوش وسایل بازی",
+        "formTitle": "فرم درخواست بازرسی ارت",
         "formCode": "AFG-FR-XXX-R0",
         "fields": {
           "شماره_پرونده": "",
@@ -43,11 +43,11 @@
     },
     {
       "code": "AFG-RP-PLAYGROUND-EARTH-WELD-R0",
-      "title": "گزارش بازرسی ارت و جوش وسایل بازی",
+      "title": "گزارش بازرسی ارت",
       "project_type_code": "PLAYGROUND_EARTH_WELD",
       "version": "R0",
       "schema": {
-        "formTitle": "گزارش بازرسی ارت و جوش وسایل بازی",
+        "formTitle": "گزارش بازرسی ارت",
         "client": "",
         "project": "",
         "contractNo": "",

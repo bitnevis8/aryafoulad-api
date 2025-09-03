@@ -51,7 +51,24 @@ class ProjectsController extends BaseController {
   }
   async getAllProjectTypes(req, res) {
     try {
-      const items = await ProjectType.findAll({ order: [["id", "ASC"]] });
+      let items = await ProjectType.findAll({ order: [["id", "ASC"]] });
+      
+      // اگر هیچ نوع پروژه‌ای وجود ندارد، انواع پیش‌فرض را ایجاد کن
+      if (items.length === 0) {
+        const defaultTypes = [
+          { code: "CRANE_INSPECTION", name: "بازرسی جرثقیل" },
+          { code: "HIC_TEST", name: "تست جذب ضربه (HIC)" },
+          { code: "PE_PIPE_TEST", name: "تست لوله پلی‌اتیلن (لهیدگی/گاز)" },
+          { code: "PLAYGROUND_EARTH_WELD", name: "بازرسی ارت" }
+        ];
+        
+        for (const type of defaultTypes) {
+          await ProjectType.create(type);
+        }
+        
+        items = await ProjectType.findAll({ order: [["id", "ASC"]] });
+      }
+      
       return this.response(res, 200, true, "OK", items);
     } catch (error) {
       return this.response(res, 500, false, "خطای داخلی سرور", null, error);

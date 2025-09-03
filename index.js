@@ -17,7 +17,7 @@ const SERVER_CONFIG = {
   IP: config.get("SERVER.IP"),
   PORT: config.get("SERVER.PORT"),
   NODE_ENV: process.env.NODE_ENV || 'development'
-};
+}
 
 // تنظیمات محیط‌های مختلف
 const ALLOWED_ORIGINS = {
@@ -103,7 +103,7 @@ const startServer = async () => {
             callback(new Error(`Origin ${origin} not allowed by CORS`));
           }
         },
-        methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
         allowedHeaders: [
           "Content-Type", 
           "Authorization", 
