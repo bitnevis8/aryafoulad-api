@@ -10,10 +10,17 @@ class RateSettingController extends baseController {
     // تابع کمکی برای بررسی تداخل بازه‌های زمانی
     async checkDateOverlap(startDate, endDate, excludeId = null) {
         const whereClause = {
-            startDate: { [Op.lte]: endDate || '9999-12-31' },
             [Op.or]: [
-                { endDate: { [Op.gte]: startDate } },
-                { endDate: null }
+                // نرخ موجود شروع می‌شود قبل از پایان نرخ جدید
+                {
+                    startDate: { [Op.lte]: endDate || '9999-12-31' },
+                    endDate: { [Op.gte]: startDate }
+                },
+                // نرخ موجود بدون پایان و شروع می‌شود قبل از پایان نرخ جدید
+                {
+                    startDate: { [Op.lte]: endDate || '9999-12-31' },
+                    endDate: null
+                }
             ]
         };
 
@@ -27,12 +34,19 @@ class RateSettingController extends baseController {
     // تابع کمکی برای بررسی تداخل با نرخ‌های فعال
     async checkActiveDateOverlap(startDate, endDate, excludeId = null) {
         const whereClause = {
-            startDate: { [Op.lte]: endDate || '9999-12-31' },
+            isActive: true,
             [Op.or]: [
-                { endDate: { [Op.gte]: startDate } },
-                { endDate: null }
-            ],
-            isActive: true
+                // نرخ فعال موجود شروع می‌شود قبل از پایان نرخ جدید
+                {
+                    startDate: { [Op.lte]: endDate || '9999-12-31' },
+                    endDate: { [Op.gte]: startDate }
+                },
+                // نرخ فعال موجود بدون پایان و شروع می‌شود قبل از پایان نرخ جدید
+                {
+                    startDate: { [Op.lte]: endDate || '9999-12-31' },
+                    endDate: null
+                }
+            ]
         };
 
         if (excludeId) {
