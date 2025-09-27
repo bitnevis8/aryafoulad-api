@@ -11,12 +11,34 @@ class InspectionRequestController extends BaseController {
 
   async getAll(req, res) {
     try {
-      const { page = 1, limit = 20, status, project_type_id } = req.query;
+      const { page = 1, limit = 20, status, project_type_id, q, firstName, lastName, mobile, dateFrom, dateTo } = req.query;
       const offset = (page - 1) * limit;
       
       const whereClause = {};
       if (status) whereClause.status = status;
       if (project_type_id) whereClause.project_type_id = project_type_id;
+      
+      // فیلترهای جستجو
+      if (q) {
+        whereClause[require('sequelize').Op.or] = [
+          { firstName: { [require('sequelize').Op.like]: `%${q}%` } },
+          { lastName: { [require('sequelize').Op.like]: `%${q}%` } },
+          { mobile: { [require('sequelize').Op.like]: `%${q}%` } }
+        ];
+      }
+      if (firstName) whereClause.firstName = { [require('sequelize').Op.like]: `%${firstName}%` };
+      if (lastName) whereClause.lastName = { [require('sequelize').Op.like]: `%${lastName}%` };
+      if (mobile) whereClause.mobile = { [require('sequelize').Op.like]: `%${mobile}%` };
+      
+      // فیلتر تاریخ
+      if (dateFrom || dateTo) {
+        whereClause.createdAt = {};
+        if (dateFrom) whereClause.createdAt[require('sequelize').Op.gte] = new Date(dateFrom);
+        if (dateTo) whereClause.createdAt[require('sequelize').Op.lte] = new Date(dateTo + 'T23:59:59.999Z');
+      }
+      
+      // فقط درخواست‌هایی که تبدیل به پروژه نشده‌اند
+      whereClause.project_id = null;
 
       const { count, rows } = await InspectionRequest.findAndCountAll({
         where: whereClause,
@@ -322,6 +344,50 @@ class InspectionRequestController extends BaseController {
     } catch (error) {
       console.error('Error in convertToProject:', error);
       return this.response(res, 500, false, "خطا در تبدیل درخواست به پروژه", null, error.message);
+    }
+  }
+
+  async getConverted(req, res) {
+    try {
+      const { page = 1, limit = 20 } = req.query;
+      const offset = (page - 1) * limit;
+      
+      const whereClause = {
+        project_id: { [require('sequelize').Op.ne]: null } // درخواست‌هایی که تبدیل شده‌اند
+      };
+
+      const { count, rows } = await InspectionRequest.findAndCountAll({
+        where: whereClause,
+        include: [
+          {
+            model: ProjectType,
+            as: 'projectType',
+            attributes: ['id', 'name', 'code']
+          },
+          {
+            model: User,
+            as: 'reviewer',
+            attributes: ['id', 'firstName', 'lastName'],
+            required: false
+          }
+        ],
+        order: [['createdAt', 'DESC']],
+        limit: parseInt(limit),
+        offset: parseInt(offset)
+      });
+
+      return this.response(res, 200, true, "درخواست‌های تبدیل شده با موفقیت دریافت شدند", {
+        requests: rows,
+        pagination: {
+          total: count,
+          page: parseInt(page),
+          limit: parseInt(limit),
+          totalPages: Math.ceil(count / limit)
+        }
+      });
+    } catch (error) {
+      console.error('Error in getConverted:', error);
+      return this.response(res, 500, false, "خطا در دریافت درخواست‌های تبدیل شده", null, error.message);
     }
   }
 }

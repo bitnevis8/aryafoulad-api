@@ -5,7 +5,7 @@ const User = require("../../user/user/model");
 class ProjectsController extends BaseController {
   async getAllProjects(req, res) {
     try {
-      const { q, firstName, lastName, nationalId, mobile, page = 1, limit = 20, sortBy = 'createdAt', sortOrder = 'DESC' } = req.query;
+      const { q, firstName, lastName, nationalId, mobile, status, projectType, dateFrom, dateTo, page = 1, limit = 20, sortBy = 'createdAt', sortOrder = 'DESC' } = req.query;
       const { Op } = require('sequelize');
       const order = [[sortBy, sortOrder && sortOrder.toUpperCase() === 'ASC' ? 'ASC' : 'DESC']];
 
@@ -27,6 +27,19 @@ class ProjectsController extends BaseController {
 
       const projectWhere = {};
       if (q) projectWhere[Op.or] = [{ client_name: { [Op.like]: `%${q}%` } }];
+      
+      // فیلتر وضعیت
+      if (status) projectWhere.status = status;
+      
+      // فیلتر نوع پروژه
+      if (projectType) projectWhere.project_type_id = projectType;
+      
+      // فیلتر تاریخ
+      if (dateFrom || dateTo) {
+        projectWhere.createdAt = {};
+        if (dateFrom) projectWhere.createdAt[Op.gte] = new Date(dateFrom);
+        if (dateTo) projectWhere.createdAt[Op.lte] = new Date(dateTo + 'T23:59:59.999Z');
+      }
 
       const offset = (parseInt(page) - 1) * parseInt(limit);
       const pageLimit = parseInt(limit);

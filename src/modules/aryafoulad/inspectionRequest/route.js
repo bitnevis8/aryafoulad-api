@@ -6,6 +6,9 @@ const { authenticateUser } = require("../../user/auth/middleware");
 // دریافت تمام درخواست‌ها (موقتاً بدون authentication برای تست)
 router.get("/getAll", InspectionRequestController.getAll);
 
+// دریافت درخواست‌های تبدیل شده
+router.get("/getConverted", InspectionRequestController.getConverted);
+
 // دریافت درخواست بر اساس ID
 router.get("/getOne/:id", authenticateUser, InspectionRequestController.getById);
 
