@@ -351,6 +351,45 @@ class ProjectsController extends BaseController {
       return this.response(res, 500, false, 'خطای داخلی سرور', null, error);
     }
   }
+
+  async updateFormSubmission(req, res) {
+    try {
+      const { id } = req.params;
+      const { data } = req.body;
+
+      const formSubmission = await ProjectFormSubmission.findByPk(id);
+      if (!formSubmission) {
+        return this.response(res, 404, false, "گزارش یافت نشد");
+      }
+
+      await formSubmission.update({
+        data: data,
+        updatedAt: new Date()
+      });
+
+      return this.response(res, 200, true, "گزارش با موفقیت به‌روزرسانی شد", formSubmission);
+    } catch (error) {
+      console.error('Error in updateFormSubmission:', error);
+      return this.response(res, 500, false, "خطا در به‌روزرسانی گزارش", null, error.message);
+    }
+  }
+
+  async deleteFormSubmission(req, res) {
+    try {
+      const { id } = req.params;
+
+      const formSubmission = await ProjectFormSubmission.findByPk(id);
+      if (!formSubmission) {
+        return this.response(res, 404, false, "گزارش یافت نشد");
+      }
+
+      await formSubmission.destroy();
+      return this.response(res, 200, true, "گزارش با موفقیت حذف شد");
+    } catch (error) {
+      console.error('Error in deleteFormSubmission:', error);
+      return this.response(res, 500, false, "خطا در حذف گزارش", null, error.message);
+    }
+  }
 }
 
 module.exports = new ProjectsController();

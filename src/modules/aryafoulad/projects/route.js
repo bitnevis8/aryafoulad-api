@@ -18,6 +18,8 @@ router.get("/requests/getOne/:id", ProjectsController.getProjectById);
 router.post("/forms/submit", ProjectsController.submitForm);
 router.get("/forms/submission/:id", ProjectsController.getFormSubmissionById);
 router.get("/forms/by-project/:projectId", ProjectsController.getFormSubmissionsByProject);
+router.put("/forms/update/:id", ProjectsController.updateFormSubmission);
+router.delete("/forms/delete/:id", ProjectsController.deleteFormSubmission);
 
 // Project status
 router.patch("/requests/status/:id", ProjectsController.updateProjectStatus);

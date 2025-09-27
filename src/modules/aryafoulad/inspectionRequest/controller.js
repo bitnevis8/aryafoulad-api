@@ -1,6 +1,7 @@
 const BaseController = require("../../../core/baseController");
 const InspectionRequest = require("./model");
 const ProjectType = require("../projects/models").ProjectType;
+const { Project } = require("../projects/models");
 const User = require("../../user/user/model");
 
 class InspectionRequestController extends BaseController {
@@ -233,6 +234,94 @@ class InspectionRequestController extends BaseController {
     } catch (error) {
       console.error('Error in delete:', error);
       return this.response(res, 500, false, "خطا در حذف درخواست", null, error.message);
+    }
+  }
+
+  async convertToProject(req, res) {
+    try {
+      const { id } = req.params;
+      const sequelize = require("../../../core/database/mysql/connection");
+      const Role = require("../../user/role/model");
+      
+      const t = await sequelize.transaction();
+      try {
+        // دریافت درخواست بازرسی
+        const inspectionRequest = await InspectionRequest.findByPk(id, {
+          include: [
+            {
+              model: ProjectType,
+              as: 'projectType',
+              attributes: ['id', 'name', 'code']
+            }
+          ],
+          transaction: t
+        });
+
+        if (!inspectionRequest) {
+          await t.rollback();
+          return this.response(res, 404, false, "درخواست بازرسی یافت نشد");
+        }
+
+        // پیدا کردن یا ایجاد کاربر
+        let user = await User.findOne({ 
+          where: { mobile: inspectionRequest.mobile }, 
+          transaction: t 
+        });
+        
+        if (!user) {
+          user = await User.create({
+            firstName: inspectionRequest.firstName,
+            lastName: inspectionRequest.lastName,
+            mobile: inspectionRequest.mobile,
+            username: inspectionRequest.mobile,
+            email: null,
+            password: inspectionRequest.mobile, // placeholder (hashed via hook)
+            isActive: true,
+          }, { transaction: t });
+          
+          // اضافه کردن نقش مشتری
+          const customerRole = await Role.findOne({ where: { nameEn: 'Customer' }, transaction: t });
+          if (customerRole && user.addRole) {
+            await user.addRole(customerRole, { transaction: t });
+          }
+        }
+
+        // ایجاد پروژه
+        const project = await Project.create({
+          customer_id: user.id,
+          project_type_id: inspectionRequest.project_type_id,
+          client_name: `${inspectionRequest.firstName} ${inspectionRequest.lastName}`.trim(),
+          client_contact: inspectionRequest.mobile || '',
+          status: 'requested',
+          meta: { 
+            converted_from_inspection_request: true,
+            original_inspection_request_id: inspectionRequest.id 
+          },
+          request_payload: inspectionRequest.request_payload || null,
+        }, { transaction: t });
+
+        // به‌روزرسانی وضعیت درخواست بازرسی
+        await inspectionRequest.update({
+          status: 'approved',
+          project_id: project.id,
+          reviewed_by: req.user?.userId || null,
+          reviewed_at: new Date(),
+          review_notes: 'تبدیل به پروژه'
+        }, { transaction: t });
+
+        await t.commit();
+        
+        return this.response(res, 201, true, "درخواست با موفقیت به پروژه تبدیل شد", {
+          project: project,
+          inspectionRequest: inspectionRequest
+        });
+      } catch (e) {
+        await t.rollback();
+        throw e;
+      }
+    } catch (error) {
+      console.error('Error in convertToProject:', error);
+      return this.response(res, 500, false, "خطا در تبدیل درخواست به پروژه", null, error.message);
     }
   }
 }

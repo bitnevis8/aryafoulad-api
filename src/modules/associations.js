@@ -4,6 +4,8 @@ const UserRole = require('./user/userRole/model');
 const { MissionOrder, MissionCompanion } = require('./aryafoulad/missionOrder/model');
 const FileUpload = require('./fileUpload/model');
 const LeaveRequest = require('./leaveRequest/model');
+const InspectionRequest = require('./aryafoulad/inspectionRequest/model');
+const { ProjectType } = require('./aryafoulad/projects/models');
 
 
 
@@ -83,6 +85,20 @@ const defineAssociations = () => {
     // ارتباط مرخصی با کاربر
     LeaveRequest.belongsTo(User, { as: 'user', foreignKey: 'userId', onDelete: 'CASCADE' });
     User.hasMany(LeaveRequest, { as: 'leaveRequests', foreignKey: 'userId', onDelete: 'CASCADE' });
+
+    // ارتباطات InspectionRequest
+    InspectionRequest.belongsTo(ProjectType, {
+        foreignKey: 'project_type_id',
+        as: 'projectType',
+        onDelete: 'RESTRICT',
+        onUpdate: 'CASCADE'
+    });
+    InspectionRequest.belongsTo(User, {
+        foreignKey: 'reviewed_by',
+        as: 'reviewer',
+        onDelete: 'SET NULL',
+        onUpdate: 'CASCADE'
+    });
 
 
 };

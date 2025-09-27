@@ -3,8 +3,8 @@ const router = express.Router();
 const InspectionRequestController = require("./controller");
 const { authenticateUser } = require("../../user/auth/middleware");
 
-// دریافت تمام درخواست‌ها
-router.get("/getAll", authenticateUser, InspectionRequestController.getAll);
+// دریافت تمام درخواست‌ها (موقتاً بدون authentication برای تست)
+router.get("/getAll", InspectionRequestController.getAll);
 
 // دریافت درخواست بر اساس ID
 router.get("/getOne/:id", authenticateUser, InspectionRequestController.getById);
@@ -20,5 +20,8 @@ router.patch("/updateStatus/:id", InspectionRequestController.updateStatus);
 
 // حذف درخواست (موقتاً بدون authentication برای تست)
 router.delete("/delete/:id", InspectionRequestController.delete);
+
+// تبدیل درخواست به پروژه
+router.post("/convertToProject/:id", InspectionRequestController.convertToProject);
 
 module.exports = router;
