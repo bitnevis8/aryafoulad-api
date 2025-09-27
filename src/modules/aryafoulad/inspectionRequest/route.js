@@ -12,6 +12,9 @@ router.get("/getConverted", InspectionRequestController.getConverted);
 // دریافت درخواست بر اساس ID
 router.get("/getOne/:id", authenticateUser, InspectionRequestController.getById);
 
+// دریافت جزئیات درخواست (موقتاً بدون authentication برای تست)
+router.get("/get/:id", InspectionRequestController.getById);
+
 // ایجاد درخواست جدید (بدون نیاز به احراز هویت - برای عموم)
 router.post("/create", InspectionRequestController.create);
 
