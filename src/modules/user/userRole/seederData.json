@@ -9,5 +9,7 @@
   },
   { "userId": 3, "roleId": 6 },
   { "userId": 4, "roleId": 6 },
-  { "userId": 5, "roleId": 6 }
+  { "userId": 5, "roleId": 6 },
+  { "email": "ahmad.mohammadi@example.com", "role": "customer" },
+  { "email": "company.customer@example.com", "role": "customer" }
 ]

@@ -11,10 +11,12 @@ const { seed: seedRateSettings } = require("../../../modules/aryafoulad/rateSett
 const seedWarehouses = require("../../../modules/aryafoulad/equipmentModule/warehouse/seeder");
 const seedEquipment = require("../../../modules/aryafoulad/equipmentModule/equipment/seeder");
 const { seed: seedProjects } = require("../../../modules/aryafoulad/projects/seeder");
+const seedAccounting = require("../../../modules/accounting/seeder");
 
 // Group seeders by module for better organization and control
 const userSeeders = [seedRoles, seedUsers, seedUserRoles];
 const aryafouladSeeders = [seedUnitLocations, seedRateSettings, seedWarehouses, seedEquipment, seedProjects];
+const accountingSeeders = [seedAccounting];
 
 
 async function runSeederGroup(seeders, groupName) {
@@ -41,6 +43,8 @@ async function runSeeders() {
     // Run aryafoulad module seeders
     await runSeederGroup(aryafouladSeeders, "Aryafoulad Data");
 
+    // Run accounting seeders
+    await runSeederGroup(accountingSeeders, "Accounting Data");
 
 
     console.log("\n✅ All database seeding completed successfully!");

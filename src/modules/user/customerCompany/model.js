@@ -49,6 +49,11 @@ const CustomerCompany = sequelize.define('CustomerCompany', {
     allowNull: true,
     comment: 'تلفن شرکت'
   },
+  fax: {
+    type: DataTypes.STRING(20),
+    allowNull: true,
+    comment: 'نمابر'
+  },
   email: {
     type: DataTypes.STRING(255),
     allowNull: true,
@@ -58,6 +63,21 @@ const CustomerCompany = sequelize.define('CustomerCompany', {
     type: DataTypes.TEXT,
     allowNull: true,
     comment: 'آدرس شرکت'
+  },
+  province: {
+    type: DataTypes.STRING(100),
+    allowNull: true,
+    comment: 'استان'
+  },
+  city: {
+    type: DataTypes.STRING(100),
+    allowNull: true,
+    comment: 'شهر'
+  },
+  postalCode: {
+    type: DataTypes.STRING(20),
+    allowNull: true,
+    comment: 'کد پستی'
   },
   latitude: {
     type: DataTypes.FLOAT,

@@ -24,9 +24,9 @@ require("../../modules/aryafoulad/inspectionRequest/model");
 
 
 // Import and define all associations
+const defineAssociations = require('../../modules/associations');
 const defineUserAssociations = require('../../modules/user/associations');
 const defineEquipmentAssociations = require("../../modules/aryafoulad/equipmentModule/associations");
-const defineAryafouladAssociations = require("../../modules/aryafoulad/associations");
 // Note: projects models define local associations; if centralization needed, add here
 
 /**
@@ -44,9 +44,9 @@ const initializeDatabase = async (options = { force: false, seed: false, useMong
 
     // تعریف تمام ارتباطات بین مدل‌ها
     console.log("🔗 Defining model associations...");
+    defineAssociations(); // فایل اصلی associations که شامل همه ماژول‌ها هست
     defineUserAssociations();
     defineEquipmentAssociations();
-    defineAryafouladAssociations();
     console.log("✅ All associations defined successfully.");
 
     if (options.force) {

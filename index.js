@@ -23,7 +23,10 @@ const SERVER_CONFIG = {
 const ALLOWED_ORIGINS = {
   production: [
     "https://aryafoulad.pourdian.com",
-    "https://aryafoulad-api.pourdian.com"
+    "https://aryafoulad-api.pourdian.com",
+    "http://localhost:3001",
+    "http://localhost:3003",
+    "http://localhost:3002"
   ],
   development: [
     "http://localhost:3003",

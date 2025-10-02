@@ -110,35 +110,61 @@ class UserController extends BaseController {
         email,
         mobile,
         phone,
+        fax,
         username,
         password,
         roleIds,
         avatar,
+        signature,
         nationalId,
         type,
         companyName,
+        businessName,
+        businessContactInfo,
         latitude,
         longitude,
+        address,
+        province,
+        city,
+        postalCode,
       } = req.body;
 
       // اعتبارسنجی ورودی‌ها
       const schema = Joi.object({
-        firstName: Joi.string().required(),
-        lastName: Joi.string().required(),
-        email: Joi.string().email().allow(null).optional(),
-        mobile: Joi.string()
-          .pattern(/^[0-9]{11}$/)
-          .optional(),
-        phone: Joi.string().optional(),
-        username: Joi.string().optional(),
+        type: Joi.string().valid('person', 'company').default('person'),
+        // فیلدهای مشترک
+        email: Joi.string().allow(null, '').optional(),
+        mobile: Joi.string().required(),
+        phone: Joi.string().allow(null, '').optional(),
+        fax: Joi.string().allow(null, '').optional(),
+        username: Joi.string().allow(null, '').optional(),
         password: Joi.string().min(6).required(),
         roleIds: Joi.array().items(Joi.number().integer()).optional(),
-        avatar: Joi.string().optional(),
-        nationalId: Joi.string().length(10).optional().allow(null, ''),
-        type: Joi.string().valid('person', 'company').optional(),
-        companyName: Joi.string().optional().allow(null, ''),
+        avatar: Joi.string().allow(null, '').optional(),
+        signature: Joi.string().allow(null, '').optional(),
         latitude: Joi.number().optional().allow(null),
         longitude: Joi.number().optional().allow(null),
+        address: Joi.string().allow(null, '').optional(),
+        province: Joi.string().allow(null, '').optional(),
+        city: Joi.string().allow(null, '').optional(),
+        postalCode: Joi.string().pattern(/^\d{10}$/).allow(null, '').optional(),
+        // فیلدهای شرطی بر اساس نوع کاربر
+        firstName: Joi.when('type', {
+          is: 'person',
+          then: Joi.string().required(),
+          otherwise: Joi.string().allow(null, '').optional()
+        }),
+        lastName: Joi.string().allow(null, '').optional(),
+        companyName: Joi.when('type', {
+          is: 'company',
+          then: Joi.string().required(),
+          otherwise: Joi.string().allow(null, '').optional()
+        }),
+        nationalId: Joi.string().allow(null, '').optional(),
+        economicCode: Joi.string().allow(null, '').optional(),
+        registrationNumber: Joi.string().allow(null, '').optional(),
+        businessName: Joi.string().allow(null, '').optional(),
+        businessContactInfo: Joi.string().allow(null, '').optional(),
       });
 
       const { error, value } = schema.validate(req.body);
@@ -151,9 +177,9 @@ class UserController extends BaseController {
       const existingUser = await User.findOne({
         where: {
           [Op.or]: [
-            value.email ? { email: value.email } : null,
-            value.mobile ? { mobile: value.mobile } : null,
-            value.nationalId ? { nationalId: value.nationalId } : null,
+            value.email && value.email.trim() !== '' ? { email: value.email } : null,
+            value.mobile && value.mobile.trim() !== '' ? { mobile: value.mobile } : null,
+            value.nationalId && value.nationalId.trim() !== '' ? { nationalId: value.nationalId } : null,
           ].filter(Boolean),
         },
       });
@@ -170,20 +196,30 @@ class UserController extends BaseController {
 
       // ایجاد کاربر جدید
       const newUser = await User.create({
-        firstName: value.firstName,
-        lastName: value.lastName,
+        firstName: value.firstName || null,
+        lastName: value.lastName || null,
         email: value.email || null,
         mobile: value.mobile || null,
         phone: value.phone || null,
+        fax: value.fax || null,
         username: value.username || null,
         password: value.password,
         avatar: value.avatar || null,
+        signature: value.signature || null,
         isEmailVerified: true,
         nationalId: value.nationalId || null,
         type: value.type || 'person',
         companyName: value.companyName || null,
+        economicCode: value.economicCode || null,
+        registrationNumber: value.registrationNumber || null,
+        businessName: value.businessName || null,
+        businessContactInfo: value.businessContactInfo || null,
         latitude: typeof value.latitude === 'number' ? value.latitude : null,
         longitude: typeof value.longitude === 'number' ? value.longitude : null,
+        address: value.address || null,
+        province: value.province || null,
+        city: value.city || null,
+        postalCode: value.postalCode || null,
       });
 
       // اگر roleIds ارائه شده باشد، نقش‌ها را به کاربر اضافه کنید
@@ -219,16 +255,68 @@ class UserController extends BaseController {
         email,
         mobile,
         phone,
+        fax,
         username,
         password,
         roleIds,
         avatar,
+        signature,
         nationalId,
         type,
         companyName,
+        businessName,
+        businessContactInfo,
         latitude,
         longitude,
+        address,
+        province,
+        city,
+        postalCode,
       } = req.body;
+
+      // اعتبارسنجی ورودی‌ها
+      const schema = Joi.object({
+        type: Joi.string().valid('person', 'company').optional(),
+        // فیلدهای مشترک
+        email: Joi.string().allow(null, '').optional(),
+        mobile: Joi.string().optional(),
+        phone: Joi.string().allow(null, '').optional(),
+        fax: Joi.string().allow(null, '').optional(),
+        username: Joi.string().allow(null, '').optional(),
+        password: Joi.string().min(6).optional(),
+        roleIds: Joi.array().items(Joi.number().integer()).optional(),
+        avatar: Joi.string().allow(null, '').optional(),
+        signature: Joi.string().allow(null, '').optional(),
+        latitude: Joi.number().optional().allow(null),
+        longitude: Joi.number().optional().allow(null),
+        address: Joi.string().allow(null, '').optional(),
+        province: Joi.string().allow(null, '').optional(),
+        city: Joi.string().allow(null, '').optional(),
+        postalCode: Joi.string().pattern(/^\d{10}$/).allow(null, '').optional(),
+        // فیلدهای شرطی بر اساس نوع کاربر
+        firstName: Joi.when('type', {
+          is: 'person',
+          then: Joi.string().optional(),
+          otherwise: Joi.string().allow(null, '').optional()
+        }),
+        lastName: Joi.string().allow(null, '').optional(),
+        companyName: Joi.when('type', {
+          is: 'company',
+          then: Joi.string().optional(),
+          otherwise: Joi.string().allow(null, '').optional()
+        }),
+        nationalId: Joi.string().allow(null, '').optional(),
+        economicCode: Joi.string().allow(null, '').optional(),
+        registrationNumber: Joi.string().allow(null, '').optional(),
+        businessName: Joi.string().allow(null, '').optional(),
+        businessContactInfo: Joi.string().allow(null, '').optional(),
+      });
+
+      const { error, value } = schema.validate(req.body);
+      if (error) {
+        console.warn("⚠️ Validation error:", error.details[0].message);
+        return this.response(res, 400, false, error.details[0].message);
+      }
 
       // بروزرسانی اطلاعات کاربر
       const updates = {
@@ -237,13 +325,21 @@ class UserController extends BaseController {
         email: email ?? user.email,
         mobile: mobile ?? user.mobile,
         phone: phone ?? user.phone,
+        fax: fax ?? user.fax,
         username: username ?? user.username,
         avatar: avatar ?? user.avatar,
+        signature: signature ?? user.signature,
         nationalId: nationalId ?? user.nationalId,
         type: type ?? user.type,
         companyName: companyName ?? user.companyName,
+        businessName: businessName ?? user.businessName,
+        businessContactInfo: businessContactInfo ?? user.businessContactInfo,
         latitude: typeof latitude === 'number' ? latitude : user.latitude,
         longitude: typeof longitude === 'number' ? longitude : user.longitude,
+        address: address ?? user.address,
+        province: province ?? user.province,
+        city: city ?? user.city,
+        postalCode: postalCode ?? user.postalCode,
       };
 
       if (password) {
