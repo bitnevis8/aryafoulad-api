@@ -21,6 +21,24 @@ class AccountingController extends BaseController {
     }
   }
 
+  async resetNumbering(req, res) {
+    try {
+      const settings = await AccountingSettings.findOne();
+      if (settings) {
+        await settings.update({
+          file_number_last_index: 0,
+          proforma_start_number: 1000,
+          invoice_start_number: 1000
+        });
+        return this.response(res, 200, true, 'شماره‌گذاری صفر شد', settings);
+      } else {
+        return this.response(res, 404, false, 'تنظیمات یافت نشد');
+      }
+    } catch (err) {
+      return this.response(res, 500, false, 'خطا در صفر کردن شماره‌گذاری', null, err.message);
+    }
+  }
+
   // Services CRUD
   async servicesGetAll(req, res) {
     try {
@@ -154,16 +172,41 @@ class AccountingController extends BaseController {
 
   async generateNextNumber(type, customerId, customerCompanyId) {
     const settings = await AccountingSettings.findOne();
-    // Determine prefix: use configured prefix; if empty, use current 2-digit year
-    let prefix = settings?.file_number_prefix;
-    if (!prefix) {
-      const now = new Date();
-      prefix = (now.getFullYear() % 100).toString().padStart(2, '0');
+    
+    // سال شماره‌گذاری: استفاده از تنظیمات یا سال جاری شمسی
+    let year = settings?.file_number_prefix;
+    if (!year) {
+      // اگر سال تنظیم نشده، سال شمسی جاری را محاسبه کن
+      const moment = require('moment-jalaali');
+      year = moment().format('jYYYY');
     }
+    
+    // شناسه مشتری: اگر فعال باشد
     const customerPart = settings?.file_number_include_customer_id ? (customerId || customerCompanyId || '0') : '';
+    
+    // شماره فاکتور: بر اساس نوع فاکتور
+    let startNumber = 1000; // پیش‌فرض
+    if (type === 'proforma') {
+      startNumber = settings?.proforma_start_number || 1000;
+    } else if (type === 'invoice') {
+      startNumber = settings?.invoice_start_number || 1000;
+    }
+    
+    // آخرین ایندکس + 1
     const nextIndex = (settings?.file_number_last_index || 0) + 1;
-    if (settings) await settings.update({ file_number_last_index: nextIndex });
-    return [prefix, customerPart, nextIndex].filter(Boolean).join('-');
+    const invoiceNumber = startNumber + nextIndex - 1;
+    
+    // به‌روزرسانی آخرین ایندکس
+    if (settings) {
+      await settings.update({ file_number_last_index: nextIndex });
+    }
+    
+    // تولید شماره نهایی: سال-شناسه مشتری-شماره فاکتور
+    const parts = [year];
+    if (customerPart) parts.push(customerPart);
+    parts.push(invoiceNumber.toString());
+    
+    return parts.join('-');
   }
 
   async createInvoice(req, res) {
@@ -172,7 +215,6 @@ class AccountingController extends BaseController {
         type = 'proforma', 
         customer_id, 
         customer_company_id, 
-        file_number, 
         invoice_date, 
         buyer_fields,
         items = [],
@@ -223,11 +265,31 @@ class AccountingController extends BaseController {
         }
       }
 
+      // تبدیل تاریخ شمسی به میلادی اگر لازم باشد
+      let processedInvoiceDate = invoice_date || new Date();
+      
+      // اگر تاریخ شمسی است (فرمت YYYY-MM-DD شمسی)
+      if (typeof invoice_date === 'string' && invoice_date.includes('-')) {
+        const parts = invoice_date.split('-');
+        if (parts.length === 3) {
+          const year = parseInt(parts[0]);
+          const month = parseInt(parts[1]);
+          const day = parseInt(parts[2]);
+          
+          // اگر سال شمسی است (مثل 1404)
+          if (year > 1000 && year < 2000) {
+            // تبدیل تاریخ شمسی به میلادی
+            const moment = require('moment-jalaali');
+            const gregorianDate = moment(`${year}/${month}/${day}`, 'jYYYY/jMM/jDD').format('YYYY-MM-DD');
+            processedInvoiceDate = new Date(gregorianDate);
+          }
+        }
+      }
+
       const created = await Invoice.create({
         type,
         number,
-        file_number,
-        invoice_date: invoice_date || new Date(),
+        invoice_date: processedInvoiceDate,
         customer_id: customer_id || null,
         customer_company_id: customer_company_id || null,
         items: items.length > 0 ? items : null,
@@ -262,7 +324,6 @@ class AccountingController extends BaseController {
       if (!invoice) return this.response(res, 404, false, 'یافت نشد');
 
       const updatable = {
-        file_number: req.body?.file_number,
         invoice_date: req.body?.invoice_date,
         buyer_legal_name: req.body?.buyer_legal_name,
         buyer_province: req.body?.buyer_province,
@@ -477,12 +538,6 @@ class AccountingController extends BaseController {
                              createPersianText(`تاریخ: ${toPersianDate(invoice.invoice_date)}`, 16, true)
                           ]
                         }),
-                        new Paragraph({
-                          alignment: AlignmentType.RIGHT,
-                          children: [
-                             createPersianText(`شماره پرونده: ${invoice.file_number || '-'}`, 16, true)
-                          ]
-                        })
                       ]
                     })
                   ]

@@ -6,6 +6,7 @@ const { authenticateUser } = require('../user/auth/middleware');
 // settings
 router.get('/settings', authenticateUser, AccountingController.getSettings);
 router.post('/settings', authenticateUser, AccountingController.updateSettings);
+router.post('/settings/reset-numbering', authenticateUser, AccountingController.resetNumbering);
 
 // invoices
 router.get('/invoices/getAll', authenticateUser, AccountingController.getAllInvoices);

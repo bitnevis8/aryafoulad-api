@@ -7,7 +7,6 @@ Invoice.init({
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
   type: { type: DataTypes.ENUM('invoice', 'proforma'), allowNull: false, defaultValue: 'proforma' },
   number: { type: DataTypes.STRING(64), allowNull: false, unique: true },
-  file_number: { type: DataTypes.STRING(64), allowNull: true },
   invoice_date: { type: DataTypes.DATE, allowNull: false, defaultValue: DataTypes.NOW },
 
   customer_id: { type: DataTypes.INTEGER, allowNull: true, comment: 'شناسه کاربر مشتری' },
