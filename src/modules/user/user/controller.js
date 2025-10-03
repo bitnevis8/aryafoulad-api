@@ -133,8 +133,8 @@ class UserController extends BaseController {
       const schema = Joi.object({
         type: Joi.string().valid('person', 'company').default('person'),
         // فیلدهای مشترک
-        email: Joi.string().allow(null, '').optional(),
-        mobile: Joi.string().required(),
+        email: Joi.string().allow(null, '').optional(), // ایمیل اختیاری است
+        mobile: Joi.string().required(), // موبایل همیشه اجباری
         phone: Joi.string().allow(null, '').optional(),
         fax: Joi.string().allow(null, '').optional(),
         username: Joi.string().allow(null, '').optional(),
@@ -151,13 +151,17 @@ class UserController extends BaseController {
         // فیلدهای شرطی بر اساس نوع کاربر
         firstName: Joi.when('type', {
           is: 'person',
-          then: Joi.string().required(),
+          then: Joi.string().required(), // برای حقیقی: نام اجباری
           otherwise: Joi.string().allow(null, '').optional()
         }),
-        lastName: Joi.string().allow(null, '').optional(),
+        lastName: Joi.when('type', {
+          is: 'person',
+          then: Joi.string().required(), // برای حقیقی: نام خانوادگی اجباری
+          otherwise: Joi.string().allow(null, '').optional()
+        }),
         companyName: Joi.when('type', {
           is: 'company',
-          then: Joi.string().required(),
+          then: Joi.string().required(), // برای حقوقی: نام شرکت اجباری
           otherwise: Joi.string().allow(null, '').optional()
         }),
         nationalId: Joi.string().allow(null, '').optional(),

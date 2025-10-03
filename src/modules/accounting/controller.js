@@ -362,7 +362,7 @@ class AccountingController extends BaseController {
       
       const totals = computeTotals(invoice.items, invoice.travel_cost, invoice.tax_percent, invoice.duties_percent);
       
-      // Helper function for Persian text with B Nazanin font
+      // Helper function for Persian text with B gitnin font
       const createPersianText = (text, size = 14, bold = false) => new TextRun({
         text,
         size,
